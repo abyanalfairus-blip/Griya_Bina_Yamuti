@@ -12,10 +12,10 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Akun admin awal. GANTI kata sandinya setelah login pertama.
-        User::updateOrCreate(
+        // Akun admin awal, hanya dibuat jika belum ada (kata sandi yang sudah diganti tidak ditimpa).
+        User::firstOrCreate(
             ['email' => env('ADMIN_EMAIL', 'admin@griyabinayamuti.or.id')],
-            ['name' => 'Admin Yayasan', 'password' => env('ADMIN_PASSWORD', 'ganti-password-ini'), 'is_admin' => true]
+            ['name' => 'Admin Yayasan', 'password' => env('ADMIN_PASSWORD', 'admin123'), 'is_admin' => true]
         );
 
         if (Program::count() === 0) {
@@ -60,6 +60,9 @@ class DatabaseSeeder extends Seeder
                 Program::create($p + ['is_active' => true]);
             }
         }
+
+        // Tiga program unggulan landing page (aman dijalankan ulang).
+        $this->call(LandingProgramSeeder::class);
 
         if (PaymentMethod::count() === 0) {
             PaymentMethod::create([

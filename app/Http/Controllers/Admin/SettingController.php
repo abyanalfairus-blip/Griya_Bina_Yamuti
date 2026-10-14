@@ -18,6 +18,11 @@ class SettingController extends Controller
                 'hero_title' => ['Judul utama beranda', 'text'],
                 'hero_subtitle' => ['Kalimat pengantar beranda', 'textarea'],
             ],
+            'Teks Halaman Program' => [
+                'program_headline' => ['Judul deretan topik (tampil di atas beranda)', 'text'],
+                'program_intro_1' => ['Paragraf pengantar 1', 'textarea'],
+                'program_intro_2' => ['Paragraf pengantar 2', 'textarea'],
+            ],
             'Tentang Kami' => [
                 'about_short' => ['Ringkasan singkat (beranda)', 'textarea'],
                 'about_history' => ['Profil & sejarah', 'textarea'],

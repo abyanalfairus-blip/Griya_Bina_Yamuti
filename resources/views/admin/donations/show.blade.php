@@ -3,8 +3,8 @@
 @section('heading', 'Donasi ' . $donation->invoice)
 @section('content')
 <div class="grid gap-6 lg:grid-cols-2">
-    <section class="rounded-2xl border border-pine-100 bg-white p-6">
-        <h2 class="font-display text-lg text-pine-900">Rincian</h2>
+    <section class="rounded-2xl border border-brand-100 bg-white p-6">
+        <h2 class="font-display text-lg text-brand-900">Rincian</h2>
         <dl class="mt-4 grid grid-cols-3 gap-y-3 text-sm">
             @foreach([
                 'Donatur' => $donation->donor_name . ($donation->is_anonymous ? ' (ingin anonim)' : ''),
@@ -19,37 +19,37 @@
                 'Dibuat' => $donation->created_at->translatedFormat('d F Y, H:i'),
                 'Pesan' => $donation->message ?: '-',
             ] as $k => $v)
-                <dt class="text-pine-600">{{ $k }}</dt><dd class="col-span-2 font-semibold">{{ $v }}</dd>
+                <dt class="text-brand-600">{{ $k }}</dt><dd class="col-span-2 font-semibold">{{ $v }}</dd>
             @endforeach
         </dl>
         @if($donation->donor_phone)
-            <a target="_blank" rel="noopener" href="https://wa.me/{{ preg_replace('/^0/', '62', preg_replace('/\D/', '', $donation->donor_phone)) }}?text={{ urlencode('Assalamualaikum ' . $donation->donor_name . ', terima kasih atas donasi ' . $donation->invoice . ' di ' . setting('site_name') . '.') }}" class="mt-5 inline-block rounded-full border border-pine-300 px-5 py-2 text-sm font-semibold text-pine-800 hover:bg-pine-50">Hubungi via WhatsApp</a>
+            <a target="_blank" rel="noopener" href="https://wa.me/{{ preg_replace('/^0/', '62', preg_replace('/\D/', '', $donation->donor_phone)) }}?text={{ urlencode('Assalamualaikum ' . $donation->donor_name . ', terima kasih atas donasi ' . $donation->invoice . ' di ' . setting('site_name') . '.') }}" class="mt-5 inline-block rounded-full border border-brand-300 px-5 py-2 text-sm font-semibold text-brand-800 hover:bg-brand-50">Hubungi via WhatsApp</a>
         @endif
     </section>
 
     <section class="space-y-6">
-        <div class="rounded-2xl border border-pine-100 bg-white p-6">
-            <h2 class="font-display text-lg text-pine-900">Bukti transfer</h2>
+        <div class="rounded-2xl border border-brand-100 bg-white p-6">
+            <h2 class="font-display text-lg text-brand-900">Bukti transfer</h2>
             @if($donation->proof)
-                <a href="{{ \Illuminate\Support\Facades\Storage::url($donation->proof) }}" target="_blank"><img src="{{ \Illuminate\Support\Facades\Storage::url($donation->proof) }}" alt="Bukti transfer" class="mt-4 max-h-96 rounded-lg border border-pine-100"></a>
+                <a href="{{ media_url($donation->proof) }}" target="_blank"><img src="{{ media_url($donation->proof) }}" alt="Bukti transfer" class="mt-4 max-h-96 rounded-lg border border-brand-100"></a>
             @else
-                <p class="mt-3 text-sm text-pine-600">Donatur belum mengunggah bukti transfer.</p>
+                <p class="mt-3 text-sm text-brand-600">Donatur belum mengunggah bukti transfer.</p>
             @endif
         </div>
 
-        <form method="POST" action="{{ route('admin.donations.update', $donation) }}" class="rounded-2xl border border-pine-100 bg-white p-6">
+        <form method="POST" action="{{ route('admin.donations.update', $donation) }}" class="rounded-2xl border border-brand-100 bg-white p-6">
             @csrf @method('PUT')
-            <h2 class="font-display text-lg text-pine-900">Verifikasi</h2>
+            <h2 class="font-display text-lg text-brand-900">Verifikasi</h2>
             <label class="mt-4 block text-sm font-semibold">Status
-                <select name="status" class="mt-1.5 w-full rounded-xl border border-pine-200 px-4 py-3 font-normal">
+                <select name="status" class="mt-1.5 w-full rounded-xl border border-brand-200 px-4 py-3 font-normal">
                     @foreach(\App\Models\Donation::STATUSES as $k => $v)<option value="{{ $k }}" @selected($donation->status === $k)>{{ $v }}</option>@endforeach
                 </select>
             </label>
             <label class="mt-4 block text-sm font-semibold">Catatan untuk donatur (tampil jika ditolak)
-                <textarea name="admin_note" rows="3" class="mt-1.5 w-full rounded-xl border border-pine-200 px-4 py-3 font-normal">{{ old('admin_note', $donation->admin_note) }}</textarea>
+                <textarea name="admin_note" rows="3" class="mt-1.5 w-full rounded-xl border border-brand-200 px-4 py-3 font-normal">{{ old('admin_note', $donation->admin_note) }}</textarea>
             </label>
-            <p class="mt-3 text-xs text-pine-600">Dana program otomatis dihitung ulang dari donasi berstatus Diterima.</p>
-            <button class="mt-4 rounded-full bg-pine-800 px-6 py-3 text-sm font-bold text-white hover:bg-pine-700">Simpan status</button>
+            <p class="mt-3 text-xs text-brand-600">Dana program otomatis dihitung ulang dari donasi berstatus Diterima.</p>
+            <button class="mt-4 rounded-full bg-brand-800 px-6 py-3 text-sm font-bold text-white hover:bg-brand-700">Simpan status</button>
         </form>
 
         <form method="POST" action="{{ route('admin.donations.destroy', $donation) }}" onsubmit="return confirm('Hapus donasi ini secara permanen?')">

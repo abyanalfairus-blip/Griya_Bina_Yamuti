@@ -77,7 +77,7 @@ abstract class ResourceController extends Controller
     {
         $item = $this->model::findOrFail($id);
         foreach ($this->fields() as $name => $f) {
-            if (($f[1] ?? '') === 'image' && $item->{$name}) {
+            if (in_array($f[1] ?? '', ['image', 'file']) && $item->{$name}) {
                 Storage::disk('public')->delete($item->{$name});
             }
         }
@@ -103,7 +103,7 @@ abstract class ResourceController extends Controller
         $data = [];
         foreach ($fields as $name => $f) {
             $type = $f[1];
-            if ($type === 'image') {
+            if (in_array($type, ['image', 'file'])) {
                 if ($request->hasFile($name)) {
                     if ($item && $item->{$name}) {
                         Storage::disk('public')->delete($item->{$name});

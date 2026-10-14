@@ -1,0 +1,40 @@
+@props(['name', 'class' => 'h-5 w-5'])
+@php
+    // Ikon garis (gaya Lucide, stroke 1.8). Tambah ikon baru cukup dengan menambah satu baris di sini.
+    $paths = [
+        'home' => '<path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v9.5h13V10"/><path d="M10 19.5v-5h4v5"/>',
+        'grid' => '<rect x="3.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.5"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.5"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.5"/>',
+        'calculator' => '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M8.5 7.5h7M8.5 12h.01M12 12h.01M15.5 12h.01M8.5 16h.01M12 16h.01M15.5 16h.01"/>',
+        'news' => '<path d="M5 4h11a2 2 0 0 1 2 2v13.5a.5.5 0 0 0 1 0V9h1.5"/><path d="M5 4v13.5A2.5 2.5 0 0 0 7.5 20H19"/><path d="M8.5 8h6M8.5 11.5h6M8.5 15h3"/>',
+        'report' => '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6M9 9h2"/>',
+        'info' => '<circle cx="12" cy="12" r="9"/><path d="M12 11v5.5M12 7.8v.01"/>',
+        'mail' => '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 7 8.5 6 8.5-6"/>',
+        'user' => '<circle cx="12" cy="8" r="4"/><path d="M4.5 20.5a7.5 7.5 0 0 1 15 0"/>',
+        'user-plus' => '<circle cx="10" cy="8" r="4"/><path d="M2.5 20.5a7.5 7.5 0 0 1 12.8-5.3M19 14v6M16 17h6"/>',
+        'log-out' => '<path d="M9 4H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h3M16 8l4 4-4 4M20 12H9"/>',
+        'heart' => '<path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.4a4.3 4.3 0 0 1 7.5 2.4C19.5 15.4 12 20 12 20z"/>',
+        'book' => '<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H20v15H6.5A2.5 2.5 0 0 0 4 20.5z"/><path d="M4 20.5A2.5 2.5 0 0 0 6.5 23H20v-5M8.5 7.5h7"/>',
+        'quran' => '<path d="M5 4.5A2.5 2.5 0 0 1 7.5 2H19v17H7.5A2.5 2.5 0 0 0 5 21.5z"/><path d="M5 21.5A2.5 2.5 0 0 0 7.5 24H19v-5"/><path d="M13.6 7.2a3 3 0 1 0 1.6 5.2 3.6 3.6 0 0 1-1.6-5.2z"/>',
+        'hands' => '<path d="M12 21s-8-4.9-8-11.3A4.6 4.6 0 0 1 12 7a4.6 4.6 0 0 1 8 2.7C20 16.1 12 21 12 21z"/><path d="M9 12.5l2 1.8 4-3.6"/>',
+        'pulse' => '<path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.4a4.3 4.3 0 0 1 7.5 2.4C19.5 15.4 12 20 12 20z"/><path d="M6.5 12.5h3l1.5-2.5 2 4 1.5-1.5h3"/>',
+        'store' => '<path d="M4 9.5 5.5 4h13L20 9.5"/><path d="M4 9.5a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0"/><path d="M5.5 12.5V20h13v-7.5M10 20v-4.5h4V20"/>',
+        'lifebuoy' => '<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="3.5"/><path d="m5.6 5.6 3.9 3.9M14.5 14.5l3.9 3.9M18.4 5.6l-3.9 3.9M9.5 14.5l-3.9 3.9"/>',
+        'sunrise' => '<path d="M12 3v4M5.6 7.6l2.2 2.2M18.4 7.6l-2.2 2.2M2.5 16H6M18 16h3.5M7 16a5 5 0 0 1 10 0M2.5 20h19"/>',
+        'gift' => '<rect x="3.5" y="8.5" width="17" height="4" rx="1"/><path d="M5 12.5V20h14v-7.5M12 8.5V20"/><path d="M12 8.5C10.5 8.5 8 8 8 6a2 2 0 0 1 4 0c0 2 0 2.500 0 2.500s0-.5 0-2.500a2 2 0 0 1 4 0c0 2-2.500 2.500-4 2.500z"/>',
+        'building' => '<path d="M4 21V9l8-5 8 5v12"/><path d="M2.5 21h19M9 21v-6h6v6M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"/>',
+        'sprout' => '<path d="M12 21v-8"/><path d="M12 13c0-4-2.500-6.500-7-6.500 0 4 2.500 6.500 7 6.500zM12 15c0-3.500 2.200-5.700 6.500-5.700 0 3.500-2.200 5.700-6.500 5.700z"/>',
+        'shield' => '<path d="M12 3 4.500 6v5.500c0 4.600 3.100 8.200 7.500 9.500 4.400-1.300 7.500-4.900 7.500-9.500V6z"/><path d="m9 12 2.200 2.200L15.500 10"/>',
+        'handshake' => '<path d="m11 17 2 2a1.400 1.400 0 0 0 2-2M14 14l2.500 2.500a1.400 1.400 0 0 0 2-2L15.300 11.300M3 8l5-3 4 2 4-2 5 3-2 6-3.500-3.500a2.100 2.100 0 0 0-3 0L11 14l-2-2-4 3z"/>',
+        'apps' => '<rect x="4" y="4" width="6.500" height="6.500" rx="1.500"/><rect x="13.500" y="4" width="6.500" height="6.500" rx="1.500"/><rect x="4" y="13.500" width="6.500" height="6.500" rx="1.500"/><path d="M16.750 13v7M13.250 16.500h7"/>',
+        'arrow-right' => '<path d="M5 12h14M13 6l6 6-6 6"/>',
+        'dashboard' => '<rect x="3.500" y="3.500" width="7" height="9" rx="1.500"/><rect x="13.500" y="3.500" width="7" height="5" rx="1.500"/><rect x="13.500" y="11.500" width="7" height="9" rx="1.500"/><rect x="3.500" y="15.500" width="7" height="5" rx="1.500"/>',
+        'menu' => '<path d="M4 7h16M4 12h16M4 17h16"/>',
+        'instagram' => '<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.2 6.8h.01"/>',
+        'facebook' => '<path d="M14.5 21v-7.5h2.7l.5-3.2h-3.2V8.4c0-.9.4-1.600 1.700-1.600h1.600V4.100C17.200 4.100 16.300 4 15.300 4c-2.400 0-4 1.500-4 4.100v2.200H8.600v3.200h2.700V21"/>',
+        'youtube' => '<rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="m10 9.200 5 2.800-5 2.800z"/>',
+        'whatsapp' => '<path d="M21 11.500a8.400 8.400 0 0 1-12.400 7.300L3 20.500l1.700-5.400A8.500 8.500 0 1 1 21 11.500z"/><path d="M9 8.800c.2 2.600 2.700 5.100 5.400 5.400l1.300-1.300-1.800-1-.9.700c-.8-.4-1.600-1.200-2-2l.7-.9-1-1.800z"/>',
+        'map-pin' => '<path d="M12 21s-7-6.100-7-11a7 7 0 0 1 14 0c0 4.900-7 11-7 11z"/><circle cx="12" cy="10" r="2.500"/>',
+        'close' => '<path d="M6 6l12 12M18 6 6 18"/>',
+    ];
+@endphp
+<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" {{ $attributes->merge(['class' => $class]) }}>{!! $paths[$name] ?? $paths['apps'] !!}</svg>

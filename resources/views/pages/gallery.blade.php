@@ -5,11 +5,11 @@
 
 <section class="mx-auto max-w-6xl px-4 pt-10" x-data="{ img: null, cap: '' }" @keydown.escape.window="img=null">
     @if($galleries->isEmpty())
-        <p class="rounded-2xl border border-dashed border-pine-200 p-12 text-center text-pine-600">Belum ada foto. Unggah foto kegiatan lewat panel admin.</p>
+        <p class="rounded-2xl border border-dashed border-brand-200 p-12 text-center text-brand-600">Belum ada foto. Unggah foto kegiatan lewat panel admin.</p>
     @else
         <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
             @foreach($galleries as $g)
-                <button type="button" @click="img='{{ \Illuminate\Support\Facades\Storage::url($g->image) }}'; cap=@js($g->title . ($g->caption ? ': ' . $g->caption : ''))" class="group overflow-hidden rounded-xl">
+                <button type="button" @click="img='{{ media_url($g->image) }}'; cap=@js($g->title . ($g->caption ? ': ' . $g->caption : ''))" class="group overflow-hidden rounded-xl">
                     <x-cover :src="$g->image" :alt="$g->title" class="aspect-square transition duration-500 group-hover:scale-105" />
                 </button>
             @endforeach

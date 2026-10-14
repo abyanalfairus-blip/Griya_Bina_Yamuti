@@ -40,6 +40,7 @@ class DonationController extends Controller
         ]);
 
         $donation = Donation::create($data + [
+            'user_id' => $request->user()?->id,
             'invoice' => 'GBY' . now()->format('ymd') . strtoupper(Str::random(5)),
             'unique_code' => random_int(11, 499),
             'is_anonymous' => $request->boolean('is_anonymous'),
