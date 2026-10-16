@@ -27,8 +27,30 @@
         }
     </script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.14.9/dist/cdn.min.js"></script>
+    <script>document.documentElement.classList.add('js')</script>
     <style>
         [x-cloak]{display:none!important}
+        /* Foto hero: tepi memudar ke warna latar (mobile: atas dan bawah; desktop: kiri dan bawah) */
+        .hero-fade{-webkit-mask-image:linear-gradient(to bottom,transparent 0,#000 22%,#000 72%,transparent 100%);mask-image:linear-gradient(to bottom,transparent 0,#000 22%,#000 72%,transparent 100%)}
+        @media (min-width:1024px){.hero-fade{-webkit-mask-image:linear-gradient(to right,transparent 0,rgba(0,0,0,.55) 18%,#000 42%),linear-gradient(to top,transparent 0,#000 24%);mask-image:linear-gradient(to right,transparent 0,rgba(0,0,0,.55) 18%,#000 42%),linear-gradient(to top,transparent 0,#000 24%);-webkit-mask-composite:source-in;mask-composite:intersect}}
+        /* Skala huruf dan ikon dibuat sedikit lebih kecil agar halaman tidak terlalu penuh */
+        html{font-size:15px}
+        @media (min-width:1280px){html{font-size:14.5px}}
+        .no-scrollbar{scrollbar-width:none;-ms-overflow-style:none}.no-scrollbar::-webkit-scrollbar{display:none}
+        /* Hiasan hero */
+        @keyframes hero-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+        @keyframes hero-spin{to{transform:translateY(-50%) rotate(360deg)}}
+        .hero-float{animation:hero-float 6s ease-in-out infinite}
+        .hero-spin{animation:hero-spin 120s linear infinite}
+        @media (prefers-reduced-motion:reduce){.hero-float,.hero-spin{animation:none}}
+        /* Animasi muncul saat scroll (diatur oleh public/js/reveal.js) */
+        .js [data-reveal]{opacity:0;transition:opacity .75s cubic-bezier(.2,.7,.2,1),transform .75s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0ms);will-change:opacity,transform}
+        .js [data-reveal=up]{transform:translateY(32px)}
+        .js [data-reveal=left]{transform:translateX(-40px)}
+        .js [data-reveal=right]{transform:translateX(40px)}
+        .js [data-reveal=zoom]{transform:scale(.94)}
+        .js [data-reveal].is-in{opacity:1;transform:none}
+        @media (prefers-reduced-motion: reduce){.js [data-reveal]{opacity:1;transform:none;transition:none}}
         .star-pattern{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='72' viewBox='0 0 72 72'%3E%3Cg fill='none' stroke='%233FBF69' stroke-opacity='.16' stroke-width='1'%3E%3Cpath d='M36 6l7 13 14-5-5 14 13 7-13 7 5 14-14-5-7 13-7-13-14 5 5-14-13-7 13-7-5-14 14 5z'/%3E%3C/g%3E%3C/svg%3E");}
         @media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
         :focus-visible{outline:3px solid #3FBF69;outline-offset:2px}
@@ -45,8 +67,12 @@
         ['Kabar', route('posts.index'), 'posts.*', 'news'],
         ['Laporan', route('reports'), 'reports*', 'report'],
         ['Tentang', route('about'), 'about', 'info'],
+        ['Dokumen', route('documents'), 'documents', 'shield'],
         ['Kontak', route('contact'), 'contact', 'mail'],
     ];
+    $navActive = collect($nav)->search(fn($n) => request()->routeIs($n[2]));
+    if ($navActive === false) $navActive = 0;
+    $navStart = max(0, min($navActive - 3, count($nav) - 4));
     $hasLogo = file_exists(public_path('images/logo.png'));
 @endphp
 
@@ -63,14 +89,32 @@
             <span class="font-display text-lg leading-none text-brand-900">{{ setting('site_name') }}</span>
         </a>
 
-        <nav class="hidden items-center gap-0.5 xl:flex" aria-label="Utama">
-            @foreach($nav as [$label, $url, $pattern, $icon])
-                <a href="{{ $url }}" @if(request()->routeIs($pattern)) aria-current="page" @endif
-                   class="flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-medium transition hover:bg-brand-50 {{ request()->routeIs($pattern) ? 'bg-brand-100 text-brand-800' : 'text-brand-700' }}">
-                    <x-icon :name="$icon" class="h-[18px] w-[18px]" />{{ $label }}
-                </a>
-            @endforeach
-        </nav>
+        {{-- Menu utama: jendela 4 menu. Panah kanan menggeser satu menu (paling kiri hilang, berikutnya muncul); panah kiri sebaliknya --}}
+        <div class="ml-auto hidden items-center gap-1 xl:flex"
+             x-data="{ start: {{ $navStart }}, show: 4, n: {{ count($nav) }}, lock: false,
+                       step(d){ const t = this.start + d; if (t < 0 || t > this.n - this.show) return; this.start = t },
+                       wheel(e){ if (this.lock) return; this.lock = true; setTimeout(() => this.lock = false, 220); this.step((e.deltaY || e.deltaX) > 0 ? 1 : -1) } }"
+             @wheel="if (Math.abs($event.deltaX) > Math.abs($event.deltaY)) { $event.preventDefault(); wheel($event) }" @keydown.arrow-left="step(-1)" @keydown.arrow-right="step(1)">
+            <button type="button" @click="step(-1)" :disabled="start === 0" aria-label="Menu sebelumnya"
+                    class="grid h-8 w-8 shrink-0 place-items-center rounded-full text-brand-700 ring-1 ring-brand-100 transition hover:bg-brand-50 disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent">
+                <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+            </button>
+            <nav class="flex items-center gap-1" aria-label="Utama">
+                @foreach($nav as $idx => [$label, $url, $pattern, $icon])
+                    <a href="{{ $url }}" @if(request()->routeIs($pattern)) aria-current="page" @endif
+                       x-show="{{ $idx }} >= start && {{ $idx }} < start + show"
+                       x-transition:enter="transition duration-300" x-transition:enter-start="opacity-0 translate-x-3" x-transition:enter-end="opacity-100 translate-x-0"
+                       @if($idx < $navStart || $idx >= $navStart + 4) x-cloak @endif
+                       class="flex shrink-0 items-center gap-2 whitespace-nowrap rounded-full px-3 py-2 text-sm font-medium transition hover:bg-brand-50 {{ request()->routeIs($pattern) ? 'bg-brand-100 text-brand-800' : 'text-brand-700' }}">
+                        <x-icon :name="$icon" class="h-4 w-4 shrink-0 opacity-80" />{{ $label }}
+                    </a>
+                @endforeach
+            </nav>
+            <button type="button" @click="step(1)" :disabled="start >= n - show" aria-label="Menu berikutnya"
+                    class="grid h-8 w-8 shrink-0 place-items-center rounded-full text-brand-700 ring-1 ring-brand-100 transition hover:bg-brand-50 disabled:cursor-default disabled:opacity-30 disabled:hover:bg-transparent">
+                <svg viewBox="0 0 24 24" class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+            </button>
+        </div>
 
         <div class="hidden items-center gap-2 xl:flex">
             <a href="{{ route('donation.create') }}" class="flex items-center gap-1.5 rounded-full bg-leaf-400 px-4 py-2.5 text-sm font-bold text-brand-950 transition hover:bg-leaf-300"><x-icon name="heart" class="h-[18px] w-[18px]" />Donasi</a>
@@ -171,7 +215,7 @@
                 @if(setting('email'))<br>Email: {{ setting('email') }}@endif
             </address>
             @php $mapSrc = setting('maps_embed') ?: 'https://www.google.com/maps?q=' . urlencode(setting('address')) . '&output=embed'; @endphp
-            <iframe src="{{ $mapSrc }}" class="mt-4 h-44 w-full rounded-2xl border-0 bg-brand-900" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Peta lokasi sekretariat"></iframe>
+            <iframe data-lazy-src="{{ $mapSrc }}" class="mt-4 h-44 w-full rounded-2xl border-0 bg-brand-900" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Peta lokasi sekretariat"></iframe>
             <a href="https://www.google.com/maps/search/?api=1&query={{ urlencode(setting('address')) }}" target="_blank" rel="noopener" class="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-leaf-400 hover:text-leaf-300"><x-icon name="map-pin" class="h-4 w-4" />Buka di Google Maps</a>
         </div>
     </div>
@@ -189,5 +233,6 @@
     </a>
 @endif
 @stack('scripts')
+    <script defer src="{{ asset('js/reveal.js') }}"></script>
 </body>
 </html>

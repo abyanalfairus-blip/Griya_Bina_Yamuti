@@ -12,7 +12,7 @@
             @if(setting('email'))<li>Email: <a class="font-semibold text-brand-800 underline" href="mailto:{{ setting('email') }}">{{ setting('email') }}</a></li>@endif
         </ul>
         @php $mapSrc = setting('maps_embed') ?: 'https://www.google.com/maps?q=' . urlencode(setting('address')) . '&output=embed'; @endphp
-        <iframe src="{{ $mapSrc }}" class="mt-6 h-64 w-full rounded-2xl border-0" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Lokasi sekretariat"></iframe>
+        <iframe data-lazy-src="{{ $mapSrc }}" class="mt-6 h-64 w-full rounded-2xl border-0" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Lokasi sekretariat"></iframe>
         <a class="mt-3 inline-block text-sm font-semibold text-brand-800 underline underline-offset-4" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query={{ urlencode(setting('address')) }}">Buka di Google Maps</a>
     </div>
 

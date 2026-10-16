@@ -37,6 +37,7 @@ Route::get('/kabar/{post:slug}', [PostController::class, 'show'])->name('posts.s
 
 Route::get('/zakat', [PageController::class, 'zakat'])->name('zakat');
 Route::get('/tentang', [PageController::class, 'about'])->name('about');
+Route::get('/legalitas', [PageController::class, 'documents'])->name('documents');
 // Akun donatur
 Route::get('/masuk', [Auth\AuthController::class, 'showLogin'])->name('login');
 Route::post('/masuk', [Auth\AuthController::class, 'login'])->middleware('throttle:10,1')->name('login.attempt');

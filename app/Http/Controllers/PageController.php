@@ -19,6 +19,11 @@ class PageController extends Controller
         return view('pages.about', ['team' => TeamMember::orderBy('sort_order')->orderBy('id')->get()]);
     }
 
+    public function documents()
+    {
+        return view('pages.documents');
+    }
+
     public function programOverview()
     {
         return view('pages.program-overview');

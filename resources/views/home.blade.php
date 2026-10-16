@@ -6,29 +6,6 @@
 
 @section('content')
 @php
-    $givingInfo = [
-        'zakat' => [
-            'label' => 'Zakat',
-            'text' => 'Kewajiban atas harta yang telah mencapai nisab dan haul. Tarifnya 2,5% untuk zakat penghasilan dan zakat maal.',
-            'cta' => 'Tunaikan zakat',
-        ],
-        'infak' => [
-            'label' => 'Infak',
-            'text' => 'Harta yang dikeluarkan untuk kebaikan tanpa batas nominal dan waktu. Berapa pun jumlahnya, kapan pun Anda mau.',
-            'cta' => 'Salurkan infak',
-        ],
-        'sedekah' => [
-            'label' => 'Sedekah',
-            'text' => 'Kebaikan dengan cakupan paling luas. Sedekah Anda membantu kebutuhan sehari-hari anak yatim dan dhuafa binaan.',
-            'cta' => 'Bersedekah sekarang',
-        ],
-        'wakaf' => [
-            'label' => 'Wakaf',
-            'text' => 'Menahan pokok harta dan mengalirkan manfaatnya terus-menerus. Wakaf uang, tanah, atau bangunan dikelola secara produktif.',
-            'cta' => 'Berwakaf',
-        ],
-    ];
-
     $flagshipView = [
         [
             'slug' => 'penyaluran-sepatu',
@@ -58,85 +35,120 @@
             'text' => 'Santunan langsung berupa bingkisan dan bantuan tunai, agar anak yatim ikut merasakan keceriaan seperti anak-anak lainnya. Disalurkan juga lewat GEREBEK, Gerakan Edukasi Berbagi Kasih.',
         ],
     ];
+
+    $groups = \App\Support\Pillars::groups();
+    $utama = collect($groups)->firstWhere('key', 'utama')['programs'] ?? [];
+    $lainnya = array_values(array_filter($groups, fn ($g) => $g['key'] !== 'utama'));
+    $utamaJs = [];
+    foreach ($utama as $u) {
+        $utamaJs[$u['slug']] = [
+            'title' => $u['title'], 'tagline' => $u['tagline'], 'desc' => $u['desc'],
+            'list_title' => $u['list_title'], 'list' => $u['list'],
+            'img' => $u['img'] ? media_url($u['img']) : null, 'alt' => $u['alt'] ?? $u['title'], 'pos' => $u['pos'] ?? 'center',
+            'url' => route('donation.create', ['type' => $u['type']]),
+            'more' => route('programs.overview') . '#' . $u['slug'],
+        ];
+    }
 @endphp
 {{-- HERO --}}
 <section class="relative overflow-hidden bg-brand-900 text-white">
     <div class="star-pattern absolute inset-0"></div>
-    <div class="relative mx-auto grid max-w-6xl items-center gap-10 px-4 pb-28 pt-12 md:pt-16 lg:grid-cols-12">
-        <div class="lg:col-span-6">
+
+    {{-- Hiasan latar --}}
+    <div class="pointer-events-none absolute inset-0 overflow-hidden" aria-hidden="true">
+        <div class="absolute -left-16 top-0 h-80 w-80 rounded-full bg-leaf-400/20 blur-3xl"></div>
+        <div class="absolute bottom-0 left-[20%] h-72 w-72 rounded-full bg-brand-500/30 blur-3xl"></div>
+        <svg viewBox="0 0 200 200" class="hero-spin absolute -left-40 top-1/2 hidden h-[34rem] w-[34rem] -translate-y-1/2 text-leaf-300/20 lg:block" fill="none" stroke="currentColor" stroke-width="0.8">
+            <rect x="40" y="40" width="120" height="120"/><rect x="40" y="40" width="120" height="120" transform="rotate(45 100 100)"/>
+            <circle cx="100" cy="100" r="62"/><circle cx="100" cy="100" r="40" stroke-dasharray="2 3"/><circle cx="100" cy="100" r="82" stroke-dasharray="1 4"/>
+        </svg>
+        <svg viewBox="0 0 64 64" class="hero-float absolute right-8 top-6 hidden h-14 w-14 text-leaf-300/80 lg:block" fill="currentColor"><path d="M44 8a26 26 0 1 0 12 40A22 22 0 0 1 44 8z"/><path d="M50 14l1.8 4.2 4.2 1.8-4.2 1.8L50 26l-1.8-4.2-4.2-1.8 4.2-1.8z" class="text-white"/></svg>
+        <svg class="absolute bottom-24 left-[36%] hidden h-24 w-32 text-white/25 lg:block" viewBox="0 0 128 96"><defs><pattern id="hd" width="16" height="16" patternUnits="userSpaceOnUse"><circle cx="2" cy="2" r="1.6" fill="currentColor"/></pattern></defs><rect width="128" height="96" fill="url(#hd)"/></svg>
+    </div>
+
+    {{-- Tombol geser foto di tepi kiri dan kanan hero --}}
+    <button type="button" onclick="window.dispatchEvent(new Event('hero-prev'))" aria-label="Foto sebelumnya"
+            class="absolute left-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 place-items-center rounded-full bg-white/10 text-white ring-1 ring-white/25 backdrop-blur transition hover:bg-leaf-400 hover:text-brand-950 lg:grid xl:left-5">
+        <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+    </button>
+    <button type="button" onclick="window.dispatchEvent(new Event('hero-next'))" aria-label="Foto berikutnya"
+            class="absolute right-3 top-1/2 z-20 hidden h-12 w-12 -translate-y-1/2 place-items-center rounded-full bg-white/10 text-white ring-1 ring-white/25 backdrop-blur transition hover:bg-leaf-400 hover:text-brand-950 lg:grid xl:right-5">
+        <svg viewBox="0 0 24 24" class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+    </button>
+
+    <div class="grid w-full items-center gap-10 px-5 pb-24 pt-10 md:pt-12 lg:min-h-[29rem] lg:grid-cols-12 lg:px-20 xl:px-24">
+        <div class="relative z-10 max-w-2xl lg:col-span-7">
             @if(\App\Support\Pillars::headline())<p class="mb-4 text-xs font-semibold uppercase tracking-[0.14em] text-leaf-300 md:text-sm">{{ \App\Support\Pillars::headline() }}</p>@endif
-            <h1 class="font-display text-4xl leading-[1.1] md:text-6xl">{{ setting('hero_title') }}</h1>
-            <p class="mt-5 max-w-xl text-lg leading-relaxed text-brand-200">{{ setting('hero_subtitle') }}</p>
+            <h1 class="font-display text-3xl leading-[1.12] md:text-5xl">{{ setting('hero_title') }}</h1>
+            <p class="mt-4 max-w-xl text-base leading-relaxed text-brand-200">{{ setting('hero_subtitle') }}</p>
             <div class="mt-8 flex flex-wrap gap-3">
-                <a href="#tunaikan" class="rounded-full bg-leaf-400 px-7 py-3.5 font-bold text-brand-950 transition hover:bg-leaf-300">Mulai berbagi</a>
+                <a href="#program-utama" class="rounded-full bg-leaf-400 px-7 py-3.5 font-bold text-brand-950 transition hover:bg-leaf-300">Mulai berbagi</a>
                 <a href="{{ route('reports') }}" class="rounded-full border border-brand-400 px-7 py-3.5 font-semibold text-white transition hover:bg-brand-800">Lihat laporan</a>
+            </div>
+            <div class="mt-8 flex flex-wrap gap-2.5">
+                <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-2 text-sm font-semibold text-white ring-1 ring-white/20 backdrop-blur"><x-icon name="heart" class="h-4 w-4 text-leaf-300"/> Berbagi kebaikan</span>
+                <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-2 text-sm font-semibold text-white ring-1 ring-white/20 backdrop-blur"><x-icon name="book" class="h-4 w-4 text-leaf-300"/> Pendidikan anak</span>
+                <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-2 text-sm font-semibold text-white ring-1 ring-white/20 backdrop-blur"><x-icon name="hands" class="h-4 w-4 text-leaf-300"/> Peduli yatim &amp; dhuafa</span>
             </div>
         </div>
 
-        <div class="lg:col-span-6">
+        {{-- Foto: di layar lebar memenuhi sisi kanan hero dan memudar ke arah teks --}}
+        <div class="-mx-5 lg:absolute lg:inset-y-0 lg:right-0 lg:mx-0 lg:w-[60%]">
             @include('partials.hero-slider')
         </div>
     </div>
 </section>
 
-{{-- PANEL BERBAGI: zakat, infak, sedekah, wakaf --}}
-<section id="tunaikan" class="relative z-10 mx-auto -mt-16 max-w-4xl scroll-mt-24 px-4"
-         x-data="{ type: 'zakat', amount: 100000, info: @js($givingInfo), get cur() { return this.info[this.type] } }">
-    <div class="rounded-3xl bg-white p-5 shadow-2xl shadow-brand-950/15 ring-1 ring-brand-100 md:p-8">
-        <h2 class="font-display text-2xl text-brand-900 md:text-3xl">Pilih cara Anda berbagi</h2>
+{{-- PROGRAM UTAMA: pilih ikon, detail tampil di bawahnya --}}
+@if(count($utama))
+<section class="relative z-10 mx-auto -mt-16 max-w-5xl px-4">
+<div id="program-utama" class="scroll-mt-24 rounded-3xl bg-white p-5 shadow-xl shadow-brand-950/5 ring-1 ring-brand-100 md:p-10"
+     x-data="{ sel: '{{ $utama[0]['slug'] }}', items: @js($utamaJs) }">
+    <h3 class="text-center font-display text-2xl text-brand-900 md:text-3xl">Program Utama</h3>
+    <p class="mx-auto mt-2 max-w-xl text-center text-sm text-brand-600">Program utama YGBY. Pilih salah satu untuk melihat program turunannya.</p>
 
-        <div class="mt-5 grid grid-cols-2 gap-2 sm:grid-cols-4" role="tablist" aria-label="Jenis kebaikan">
-            @foreach($givingInfo as $key => $g)
-                <button type="button" role="tab" @click="type = '{{ $key }}'" :aria-selected="type === '{{ $key }}'"
-                        :class="type === '{{ $key }}' ? 'bg-brand-800 text-white' : 'bg-brand-50 text-brand-800 hover:bg-brand-100'"
-                        class="rounded-xl px-3 py-3 text-sm font-bold transition">{{ $g['label'] }}</button>
-            @endforeach
-        </div>
+    <div class="mt-8 grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-7 md:gap-4" role="tablist" aria-label="Program utama">
+        @foreach($utama as $pr)
+            <button type="button" role="tab" @click="sel = '{{ $pr['slug'] }}'" :aria-selected="sel === '{{ $pr['slug'] }}'"
+                    class="group flex flex-col items-center gap-2.5 text-center">
+                <span :class="sel === '{{ $pr['slug'] }}' ? 'bg-brand-700 text-white shadow-lg shadow-brand-700/30' : 'border border-brand-100 bg-white text-brand-600 group-hover:border-brand-300 group-hover:bg-brand-50'"
+                      class="grid h-20 w-20 place-items-center rounded-2xl transition md:h-24 md:w-24">
+                    <x-icon :name="$pr['icon']" class="h-9 w-9 md:h-10 md:w-10" />
+                </span>
+                <span :class="sel === '{{ $pr['slug'] }}' ? 'font-bold text-brand-700' : 'text-brand-800'" class="text-sm leading-snug">{{ $pr['title'] }}</span>
+            </button>
+        @endforeach
+        <a href="{{ route('programs.overview') }}" class="group flex flex-col items-center gap-2.5 text-center">
+            <span class="grid h-20 w-20 place-items-center rounded-2xl border border-brand-100 bg-white text-brand-600 transition group-hover:border-brand-300 group-hover:bg-brand-50 md:h-24 md:w-24"><x-icon name="apps" class="h-9 w-9 md:h-10 md:w-10" /></span>
+            <span class="text-sm leading-snug text-brand-800">Lainnya</span>
+        </a>
+    </div>
 
-        <p class="mt-4 min-h-[3.5rem] leading-relaxed text-brand-700" x-text="cur.text">{{ $givingInfo['zakat']['text'] }}</p>
-
-        <div class="mt-4 grid grid-cols-3 gap-2 sm:grid-cols-6">
-            @foreach([25000, 50000, 100000, 250000, 500000, 1000000] as $n)
-                <button type="button" @click="amount = {{ $n }}"
-                        :class="amount === {{ $n }} ? 'border-brand-700 bg-brand-50 text-brand-800' : 'border-brand-100 text-brand-700 hover:border-brand-300'"
-                        class="rounded-xl border-2 py-2.5 text-sm font-bold transition">{{ number_format($n / 1000, 0, ',', '.') }}rb</button>
-            @endforeach
-        </div>
-
-        <div class="mt-3 flex flex-col gap-3 sm:flex-row">
-            <label class="relative block flex-1">
-                <span class="sr-only">Nominal lain</span>
-                <span class="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 font-semibold text-brand-600">Rp</span>
-                <input type="number" min="10000" step="1000" x-model.number="amount" class="w-full rounded-xl border-2 border-brand-100 py-3 pl-12 pr-4 text-lg font-bold text-brand-900 focus:border-brand-500 focus:outline-none">
-            </label>
-            <a :href="'{{ route('donation.create') }}?type=' + type + '&amp;amount=' + amount"
-               class="rounded-full bg-leaf-400 px-8 py-3.5 text-center font-bold text-brand-950 transition hover:bg-leaf-300" x-text="cur.cta">{{ $givingInfo['zakat']['cta'] }}</a>
-        </div>
-
-        <div class="mt-4 flex flex-wrap items-center justify-between gap-2 text-sm text-brand-600">
-            <p x-show="type === 'zakat'" x-cloak>Belum tahu jumlahnya? <a href="{{ route('zakat') }}" class="font-semibold text-brand-800 underline underline-offset-4">Hitung zakat Anda</a>. Zakat fitrah {{ rupiah((int) setting('fitrah_rate')) }} per jiwa.</p>
-            <p x-show="type !== 'zakat'">Nominal bebas, mulai dari Rp 10.000.</p>
-            <a href="{{ route('reports') }}" class="font-semibold text-brand-800 underline underline-offset-4">Semua donasi tercatat dan dilaporkan</a>
+    <div class="mt-10 grid items-start gap-8 border-t border-brand-100 pt-10 lg:grid-cols-12" aria-live="polite">
+        <template x-if="items[sel].img">
+            <div class="lg:col-span-5">
+                <img :src="items[sel].img" :alt="items[sel].alt" class="aspect-[4/3] w-full rounded-2xl object-cover" :style="'object-position:' + items[sel].pos">
+            </div>
+        </template>
+        <div :class="items[sel].img ? 'lg:col-span-7' : 'lg:col-span-12'">
+            <h4 class="font-display text-2xl text-brand-900 md:text-3xl" x-text="items[sel].title"></h4>
+            <p class="mt-2 text-lg font-semibold text-brand-600" x-text="items[sel].tagline"></p>
+            <p class="mt-3 leading-relaxed text-brand-800" x-text="items[sel].desc"></p>
+            <h5 class="mt-5 font-semibold text-brand-900" x-text="items[sel].list_title"></h5>
+            <ul class="mt-2 space-y-2">
+                <template x-for="item in items[sel].list" :key="item">
+                    <li class="flex gap-3 text-brand-800"><span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-leaf-500"></span><span class="leading-relaxed" x-text="item"></span></li>
+                </template>
+            </ul>
+            <div class="mt-6 flex flex-wrap gap-3">
+                <a :href="items[sel].url" class="rounded-full bg-leaf-400 px-6 py-3 text-sm font-bold text-brand-950 transition hover:bg-leaf-300">Dukung program ini</a>
+                <a :href="items[sel].more" class="rounded-full border border-brand-300 px-6 py-3 text-sm font-semibold text-brand-800 transition hover:bg-brand-50">Lihat selengkapnya</a>
+            </div>
         </div>
     </div>
+</div>
 </section>
-
-{{-- STATISTIK --}}
-<section class="mx-auto mt-12 max-w-6xl px-4">
-    <dl class="grid grid-cols-2 gap-y-6 md:grid-cols-4">
-        @foreach([
-            ['Donasi terkumpul', rupiah($stats['collected'])],
-            ['Dana tersalur', rupiah($stats['distributed'])],
-            ['Donatur', number_format($stats['donors'], 0, ',', '.')],
-            ['Program aktif', $stats['programs']],
-        ] as [$label, $value])
-            <div class="md:border-l md:border-brand-200 md:pl-6 md:first:border-0 md:first:pl-0">
-                <dd class="font-display text-2xl text-brand-800 md:text-3xl">{{ $value }}</dd>
-                <dt class="mt-1 text-sm text-brand-600">{{ $label }}</dt>
-            </div>
-        @endforeach
-    </dl>
-</section>
+@endif
 
 {{-- PROGRAM UNGGULAN (dari menu Program donasi) --}}
 @if($flagship->isNotEmpty())
@@ -204,72 +216,6 @@
             @endforeach
         </div>
     </div>
-
-    @php
-        $groups = \App\Support\Pillars::groups();
-        $utama = collect($groups)->firstWhere('key', 'utama')['programs'] ?? [];
-        $lainnya = array_values(array_filter($groups, fn ($g) => $g['key'] !== 'utama'));
-        $utamaJs = [];
-        foreach ($utama as $u) {
-            $utamaJs[$u['slug']] = [
-                'title' => $u['title'], 'tagline' => $u['tagline'], 'desc' => $u['desc'],
-                'list_title' => $u['list_title'], 'list' => $u['list'],
-                'img' => $u['img'] ? media_url($u['img']) : null, 'alt' => $u['alt'] ?? $u['title'], 'pos' => $u['pos'] ?? 'center',
-                'url' => route('donation.create', ['type' => $u['type']]),
-                'more' => route('programs.overview') . '#' . $u['slug'],
-            ];
-        }
-    @endphp
-
-    {{-- PROGRAM UTAMA: pilih ikon, detail tampil di bawahnya --}}
-    @if(count($utama))
-    <div id="program-utama" class="mt-14 scroll-mt-24 rounded-3xl bg-white p-5 shadow-xl shadow-brand-950/5 ring-1 ring-brand-100 md:p-10"
-         x-data="{ sel: '{{ $utama[0]['slug'] }}', items: @js($utamaJs) }">
-        <h3 class="text-center font-display text-2xl text-brand-900 md:text-3xl">Program Utama</h3>
-        <p class="mx-auto mt-2 max-w-xl text-center text-sm text-brand-600">Program utama YGBY. Pilih salah satu untuk melihat program turunannya.</p>
-
-        <div class="mt-8 grid grid-cols-3 gap-3 sm:grid-cols-4 md:grid-cols-7 md:gap-4" role="tablist" aria-label="Program utama">
-            @foreach($utama as $pr)
-                <button type="button" role="tab" @click="sel = '{{ $pr['slug'] }}'" :aria-selected="sel === '{{ $pr['slug'] }}'"
-                        class="group flex flex-col items-center gap-2.5 text-center">
-                    <span :class="sel === '{{ $pr['slug'] }}' ? 'bg-brand-700 text-white shadow-lg shadow-brand-700/30' : 'border border-brand-100 bg-white text-brand-600 group-hover:border-brand-300 group-hover:bg-brand-50'"
-                          class="grid h-20 w-20 place-items-center rounded-2xl transition md:h-24 md:w-24">
-                        <x-icon :name="$pr['icon']" class="h-9 w-9 md:h-10 md:w-10" />
-                    </span>
-                    <span :class="sel === '{{ $pr['slug'] }}' ? 'font-bold text-brand-700' : 'text-brand-800'" class="text-sm leading-snug">{{ $pr['title'] }}</span>
-                </button>
-            @endforeach
-            <a href="{{ route('programs.overview') }}" class="group flex flex-col items-center gap-2.5 text-center">
-                <span class="grid h-20 w-20 place-items-center rounded-2xl border border-brand-100 bg-white text-brand-600 transition group-hover:border-brand-300 group-hover:bg-brand-50 md:h-24 md:w-24"><x-icon name="apps" class="h-9 w-9 md:h-10 md:w-10" /></span>
-                <span class="text-sm leading-snug text-brand-800">Lainnya</span>
-            </a>
-        </div>
-
-        <div class="mt-10 grid items-start gap-8 border-t border-brand-100 pt-10 lg:grid-cols-12" aria-live="polite">
-            <template x-if="items[sel].img">
-                <div class="lg:col-span-5">
-                    <img :src="items[sel].img" :alt="items[sel].alt" class="aspect-[4/3] w-full rounded-2xl object-cover" :style="'object-position:' + items[sel].pos">
-                </div>
-            </template>
-            <div :class="items[sel].img ? 'lg:col-span-7' : 'lg:col-span-12'">
-                <h4 class="font-display text-2xl text-brand-900 md:text-3xl" x-text="items[sel].title"></h4>
-                <p class="mt-2 text-lg font-semibold text-brand-600" x-text="items[sel].tagline"></p>
-                <p class="mt-3 leading-relaxed text-brand-800" x-text="items[sel].desc"></p>
-                <h5 class="mt-5 font-semibold text-brand-900" x-text="items[sel].list_title"></h5>
-                <ul class="mt-2 space-y-2">
-                    <template x-for="item in items[sel].list" :key="item">
-                        <li class="flex gap-3 text-brand-800"><span class="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-leaf-500"></span><span class="leading-relaxed" x-text="item"></span></li>
-                    </template>
-                </ul>
-                <div class="mt-6 flex flex-wrap gap-3">
-                    <a :href="items[sel].url" class="rounded-full bg-leaf-400 px-6 py-3 text-sm font-bold text-brand-950 transition hover:bg-leaf-300">Dukung program ini</a>
-                    <a :href="items[sel].more" class="rounded-full border border-brand-300 px-6 py-3 text-sm font-semibold text-brand-800 transition hover:bg-brand-50">Lihat selengkapnya</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    @endif
 
     @foreach($lainnya as $g)
         <div class="mt-14">
@@ -359,8 +305,27 @@
         <div class="relative">
             <h2 class="mx-auto max-w-2xl font-display text-3xl md:text-4xl">Sedekah tidak akan mengurangi harta, tetapi membukakan pintu kebaikan</h2>
             <p class="mx-auto mt-4 max-w-xl text-brand-200">Mulai dari nominal yang Anda mampu. Kami menjaga amanah ini agar sampai kepada yang berhak.</p>
-            <a href="#tunaikan" class="mt-8 inline-block rounded-full bg-leaf-400 px-8 py-3.5 font-bold text-brand-950 hover:bg-leaf-300">Mulai berbagi</a>
+            <a href="#program-utama" class="mt-8 inline-block rounded-full bg-leaf-400 px-8 py-3.5 font-bold text-brand-950 hover:bg-leaf-300">Mulai berbagi</a>
         </div>
     </div>
+</section>
+
+{{-- STATISTIK: ikon di atas, angka besar, label di bawah --}}
+<section class="mx-auto mt-20 max-w-6xl px-4">
+    <h2 class="text-center font-display text-3xl text-brand-900 md:text-4xl">Mengapa berdonasi di {{ setting('site_name') }}?</h2>
+    <dl class="mt-12 grid grid-cols-2 gap-x-4 gap-y-12 text-center lg:grid-cols-4">
+        @foreach([
+            ['Donasi terkumpul', rupiah($stats['collected']), $stats['collected'], 'Rp ', 'wallet'],
+            ['Dana tersalur', rupiah($stats['distributed']), $stats['distributed'], 'Rp ', 'gift'],
+            ['Jumlah donatur', number_format($stats['donors'], 0, ',', '.'), $stats['donors'], '', 'users'],
+            ['Program aktif', $stats['programs'], $stats['programs'], '', 'sprout'],
+        ] as [$label, $value, $raw, $prefix, $icon])
+            <div class="flex flex-col items-center">
+                <x-icon :name="$icon" class="h-14 w-14 text-brand-600 [stroke-width:1.4]" />
+                <dd class="mt-4 text-3xl font-extrabold tracking-tight text-brand-700 md:text-4xl" data-count="{{ (int) $raw }}" data-prefix="{{ $prefix }}">{{ $value }}</dd>
+                <dt class="mt-1 text-brand-900">{{ $label }}</dt>
+            </div>
+        @endforeach
+    </dl>
 </section>
 @endsection

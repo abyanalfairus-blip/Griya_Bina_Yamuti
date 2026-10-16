@@ -151,7 +151,7 @@ Teman satu tim cukup `git pull`, lalu menjalankan dua perintah yang sama.
 - **Logo**: file logo ada di `public/images/logo.png` (latar transparan, resolusi tinggi) dan ikon tab di `public/favicon.png`. Ganti file itu untuk memperbarui logo; tampil otomatis di menu dan footer.
 - **Ikon**: semua ikon ada di `resources/views/components/icon.blade.php`. Pakai dengan `<x-icon name="home" />`.
 - **Akun donatur**: `/daftar`, `/masuk`, `/akun`. Donasi yang dikirim saat sudah masuk tercatat di riwayat akun. Akun yang dibuat dari halaman daftar selalu bukan admin. Admin tetap masuk lewat `/masuk` atau `/admin/login`, lalu diarahkan ke panel admin.
-- **Program Utama** di beranda: pilih ikon untuk melihat program turunan. Isinya dari `app/Support/Pillars.php`.
+- **Program Utama** di beranda (tepat di bawah hero): pilih ikon untuk melihat program turunan. Isinya dari `app/Support/Pillars.php`.
 
 ## Program yang bisa dikelola dari panel admin
 
@@ -184,3 +184,23 @@ php artisan storage:link
 ```
 
 Sebagai cadangan, proyek ini punya rute `/storage/...` yang melayani foto walau perintah itu belum dijalankan, dan alamat gambar selalu mengikuti alamat yang sedang dibuka (tidak bergantung pada `APP_URL`).
+
+## Animasi saat scroll
+
+Konten tampil bertahap ketika masuk layar (muncul naik/geser dengan jeda berurutan), angka statistik di beranda menghitung naik, dan peta di footer baru dimuat saat mendekati layar. Semua diatur oleh `public/js/reveal.js` dan CSS kecil di `layouts/app.blade.php`; tidak ada yang perlu ditandai manual.
+
+- Pengguna yang mengaktifkan "kurangi gerakan" di sistemnya langsung melihat semua konten tanpa animasi.
+- Untuk mengecualikan suatu bagian dari animasi, beri atribut `data-no-reveal` pada elemennya.
+- Untuk menganimasikan satu blok utuh (tidak dipecah per bagian), beri atribut `data-reveal-whole`.
+
+## Foto hero dengan gradasi
+Foto slider kini memenuhi sisi kanan hero dan memudar halus ke warna latar (tanpa kotak). File yang berubah:
+`resources/views/partials/hero-slider.blade.php`, `resources/views/home.blade.php`, `resources/views/layouts/app.blade.php`.
+Setelah menimpa file: `php artisan optimize:clear`, lalu Ctrl+F5.
+
+Hero juga memiliki hiasan (bintang segi delapan, bulan sabit, titik, lencana ikon melayang) di `home.blade.php`; animasi CSS di `layouts/app.blade.php`.
+
+## Legalitas dan perizinan (halaman Tentang Kami)
+Lima dokumen (SK Kemenkumham, lampiran akta, penetapan LKS Dinsos, akreditasi Kemensos, SK UPZ BAZNAS) tampil di halaman **Dokumen** (`/legalitas`, menu "Dokumen") lewat `resources/views/partials/legalitas.blade.php`. Pratinjau di `public/images/legalitas/`, PDF di `public/berkas/`. Untuk menambah dokumen, tambahkan satu baris pada array `$docs` di partial itu dan taruh berkasnya di dua folder tersebut. Perhatikan masa berlaku akreditasi (sampai 5 Juli 2026) dan perbarui bila sudah ada sertifikat baru.
+
+Catatan: folder PDF bernama `public/berkas` (bukan `public/dokumen`) agar tidak bentrok dengan nama rute; folder lama `public/dokumen` boleh dihapus. Folder yang namanya sama dengan rute membuat server menampilkan "Not Found". Jika sebelumnya sudah menyalin folder `public/dokumen`, hapus folder itu.
