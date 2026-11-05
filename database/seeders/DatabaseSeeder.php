@@ -14,8 +14,8 @@ class DatabaseSeeder extends Seeder
     {
         // Akun admin awal, hanya dibuat jika belum ada (kata sandi yang sudah diganti tidak ditimpa).
         User::firstOrCreate(
-            ['email' => env('ADMIN_EMAIL', 'awam@gmail.com')],
-            ['name' => 'Admin Yayasan', 'password' => env('ADMIN_PASSWORD', 'selalu2005'), 'is_admin' => true]
+            ['email' => env('ADMIN_EMAIL', 'admin@griyabinayamuti.or.id')],
+            ['name' => 'Admin Yayasan', 'password' => env('ADMIN_PASSWORD', 'ganti-password-ini'), 'is_admin' => true]
         );
 
         if (Program::count() === 0) {
@@ -64,16 +64,7 @@ class DatabaseSeeder extends Seeder
         // Tiga program unggulan landing page (aman dijalankan ulang).
         $this->call(LandingProgramSeeder::class);
 
-        if (PaymentMethod::count() === 0) {
-            PaymentMethod::create([
-                'name' => 'Transfer Bank (isi nama bank resmi yayasan)',
-                'type' => 'bank',
-                'account_number' => 'ISI-DI-PANEL-ADMIN',
-                'account_name' => 'Yayasan Griya Bina Yamuti',
-                'instructions' => 'Lengkapi nomor rekening resmi di menu Metode Pembayaran pada panel admin.',
-                'sort_order' => 1,
-            ]);
-        }
+        // Rekening resmi yayasan diisi oleh migrasi 2026_11_05_000002_set_official_payment_methods.
 
         if (Post::count() === 0) {
             Post::create([

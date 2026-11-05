@@ -36,7 +36,13 @@
         /* Skala huruf dan ikon dibuat sedikit lebih kecil agar halaman tidak terlalu penuh */
         html{font-size:15px}
         @media (min-width:1280px){html{font-size:14.5px}}
+        /* Cegah geser ke samping di ponsel akibat animasi masuk dari kanan/kiri */
+        html,body{overflow-x:clip}
         .no-scrollbar{scrollbar-width:none;-ms-overflow-style:none}.no-scrollbar::-webkit-scrollbar{display:none}
+        /* Bilah progres donasi terisi perlahan */
+        @keyframes progress-grow{from{width:0}}
+        .progress-fill{animation:progress-grow 1.4s cubic-bezier(.22,1,.36,1) both}
+        @media (prefers-reduced-motion:reduce){.progress-fill{animation:none}}
         /* Hiasan hero */
         @keyframes hero-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
         @keyframes hero-spin{to{transform:translateY(-50%) rotate(360deg)}}

@@ -38,9 +38,12 @@
         <h2 class="font-display text-xl text-brand-900">Transfer ke</h2>
         <div class="mt-4 flex flex-col gap-5 sm:flex-row sm:items-center">
             @if($m->qr_image)
-                <img src="{{ media_url($m->qr_image) }}" alt="Kode QR {{ $m->name }}" class="h-44 w-44 rounded-xl border border-brand-100 object-contain p-2">
+                <a href="{{ media_url($m->qr_image) }}" target="_blank" rel="noopener" class="shrink-0" title="Buka QRIS ukuran penuh">
+                    <img src="{{ media_url($m->qr_image) }}" alt="Kode QR {{ $m->name }}" class="w-56 rounded-xl border border-brand-100 bg-white object-contain p-1 shadow-sm">
+                </a>
             @endif
             <div x-data="{ copied:false }">
+                @if($m->logo && $m->type !== 'qris')<img src="{{ asset($m->logo) }}" alt="" class="mb-2 h-8 w-auto">@endif
                 <p class="font-semibold text-brand-800">{{ $m->name }}</p>
                 @if($m->account_number)
                     <p class="mt-1 font-mono text-2xl font-bold tracking-wide text-brand-900" x-ref="acc">{{ $m->account_number }}</p>

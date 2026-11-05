@@ -78,9 +78,16 @@
             @forelse($methods as $m)
                 <label class="mt-2 flex cursor-pointer items-center gap-4 rounded-xl border-2 border-brand-100 p-4 has-[:checked]:border-brand-600 has-[:checked]:bg-brand-50">
                     <input type="radio" name="payment_method_id" value="{{ $m->id }}" @checked((int) old('payment_method_id', $loop->first ? $m->id : 0) === $m->id) class="h-5 w-5 text-brand-700">
-                    <span>
+                    <span class="grid h-11 w-20 shrink-0 place-items-center rounded-lg bg-white px-2 ring-1 ring-brand-100">
+                        @if($m->logo)
+                            <img src="{{ asset($m->logo) }}" alt="" class="max-h-7 w-auto object-contain">
+                        @else
+                            <x-icon name="wallet" class="h-5 w-5 text-brand-600" />
+                        @endif
+                    </span>
+                    <span class="min-w-0">
                         <span class="block font-semibold text-brand-900">{{ $m->name }}</span>
-                        <span class="block text-xs text-brand-600">{{ \App\Models\PaymentMethod::TYPES[$m->type] ?? $m->type }}</span>
+                        <span class="block text-xs text-brand-600">{{ \App\Models\PaymentMethod::TYPES[$m->type] ?? $m->type }}@if($m->account_number) · {{ $m->account_number }}@endif</span>
                     </span>
                 </label>
             @empty

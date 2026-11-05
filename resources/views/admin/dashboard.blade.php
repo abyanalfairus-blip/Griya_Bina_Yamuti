@@ -27,8 +27,14 @@
         <h2 class="font-display text-lg text-brand-900">Donasi diterima, 6 bulan terakhir</h2>
         <div class="mt-6 flex h-48 items-end gap-3">
             @foreach($months as $m)
-                <div class="flex flex-1 flex-col items-center gap-2">
-                    <div class="w-full rounded-t-lg bg-brand-600" style="height: {{ max(3, $m['value'] / $max * 100) }}%" title="{{ rupiah($m['value']) }}"></div>
+                <div class="flex h-full flex-1 flex-col items-center gap-2">
+                    {{-- Wadah setinggi grafik agar tinggi batang (persen) terhitung dengan benar --}}
+                    <div class="group relative w-full flex-1">
+                        <div class="absolute inset-x-0 bottom-0 rounded-t-lg bg-gradient-to-t from-brand-700 to-brand-500 transition group-hover:from-leaf-600 group-hover:to-leaf-400" style="height: {{ max(2, $m['value'] / $max * 100) }}%" title="{{ rupiah($m['value']) }}"></div>
+                        @if($m['value'] > 0)
+                            <span class="absolute inset-x-0 text-center text-[10px] font-semibold text-brand-700" style="bottom: calc({{ max(2, $m['value'] / $max * 100) }}% + 4px)">{{ $m['value'] >= 1000000 ? rtrim(rtrim(number_format($m['value'] / 1000000, 1, ',', '.'), '0'), ',') . ' jt' : number_format($m['value'] / 1000, 0, ',', '.') . ' rb' }}</span>
+                        @endif
+                    </div>
                     <span class="text-xs text-brand-600">{{ $m['label'] }}</span>
                 </div>
             @endforeach
