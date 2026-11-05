@@ -226,13 +226,53 @@
     </div>
 </footer>
 
+{{-- Navigasi bawah (ponsel dan tablet): tombol tengah menuju halaman donasi --}}
+@php
+    $acctUrl = auth()->check() ? route('account') : route('login');
+    $bottom = [
+        ['Beranda', route('home'), request()->routeIs('home'), 'home'],
+        ['Program', route('programs.overview'), request()->routeIs('programs.*'), 'grid'],
+        null,
+        ['Laporan', route('reports'), request()->routeIs('reports*'), 'report'],
+        [auth()->check() ? 'Akun' : 'Masuk', $acctUrl, request()->routeIs('account', 'login', 'register'), 'user'],
+    ];
+@endphp
+<div class="h-20 bg-brand-950 xl:hidden" aria-hidden="true"></div>
+<nav class="fixed inset-x-0 bottom-0 z-40 border-t border-brand-100 bg-white/95 pb-[env(safe-area-inset-bottom)] shadow-[0_-8px_24px_-12px_rgba(9,23,48,0.25)] backdrop-blur xl:hidden" aria-label="Navigasi bawah">
+    <ul class="mx-auto grid h-16 max-w-lg grid-cols-5 items-center px-2">
+        @foreach($bottom as $b)
+            @if($b === null)
+                <li class="flex justify-center">
+                    <a href="{{ route('donation.create') }}" aria-label="Donasi sekarang"
+                       class="-mt-8 flex flex-col items-center gap-1 text-[11px] font-bold {{ request()->routeIs('donation.*') ? 'text-leaf-600' : 'text-brand-800' }}">
+                        <span class="grid h-14 w-14 place-items-center rounded-full bg-gradient-to-br from-leaf-400 to-leaf-600 text-white shadow-lg shadow-leaf-600/40 ring-4 ring-white transition active:scale-95">
+                            <x-icon name="heart" class="h-7 w-7" />
+                        </span>
+                        Donasi
+                    </a>
+                </li>
+            @else
+                @php [$label, $url, $active, $icon] = $b; @endphp
+                <li>
+                    <a href="{{ $url }}" @if($active) aria-current="page" @endif
+                       class="flex flex-col items-center gap-1 py-1 text-[11px] font-semibold transition {{ $active ? 'text-brand-800' : 'text-brand-500 hover:text-brand-800' }}">
+                        <span class="grid h-8 w-12 place-items-center rounded-full {{ $active ? 'bg-brand-100' : '' }}"><x-icon :name="$icon" class="h-5 w-5" /></span>
+                        {{ $label }}
+                    </a>
+                </li>
+            @endif
+        @endforeach
+    </ul>
+</nav>
+
 @if(setting('whatsapp'))
     <a href="https://wa.me/{{ setting('whatsapp') }}?text={{ urlencode('Assalamualaikum, saya ingin bertanya tentang donasi di ' . setting('site_name')) }}" target="_blank" rel="noopener"
-       class="fixed bottom-5 right-5 z-40 grid h-14 w-14 place-items-center rounded-full bg-[#25D366] text-white shadow-lg transition hover:scale-105" aria-label="Chat WhatsApp">
+       class="fixed bottom-24 right-4 z-40 grid h-12 w-12 place-items-center rounded-full bg-[#25D366] xl:bottom-5 xl:right-5 xl:h-14 xl:w-14 text-white shadow-lg transition hover:scale-105" aria-label="Chat WhatsApp">
         <svg viewBox="0 0 24 24" class="h-7 w-7" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-12.4 7.3L3 20.5l1.7-5.4A8.5 8.5 0 1 1 21 11.5z"/><path d="M8.8 9.2c.3 2.200 2.700 4.600 5 5l1.300-1.300-1.800-1-.9.700c-.8-.4-1.600-1.200-2-2l.7-.9-1-1.800z" fill="currentColor" stroke="none"/></svg>
     </a>
 @endif
 @stack('scripts')
     <script defer src="{{ asset('js/reveal.js') }}"></script>
+@include('partials.confirm-modal')
 </body>
 </html>

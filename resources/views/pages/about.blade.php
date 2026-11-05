@@ -47,7 +47,7 @@
 <section class="mx-auto mt-20 max-w-6xl px-4">
     <div class="rounded-3xl bg-brand-50 p-8 md:p-10">
         <h2 class="font-display text-2xl text-brand-900">Legalitas dan perizinan</h2>
-        <p class="mt-2 max-w-2xl text-brand-700">Pengesahan badan hukum, penetapan LKS, akreditasi, dan SK UPZ yayasan dapat dilihat dan diunduh pada halaman Dokumen.</p>
+        <p class="mt-2 max-w-2xl text-brand-700">Pengesahan badan hukum, penetapan LKS, akreditasi, dan SK UPZ yayasan dapat dibaca pada halaman Dokumen.</p>
         <a href="{{ route('documents') }}" class="mt-5 inline-block rounded-full bg-brand-800 px-6 py-3 text-sm font-bold text-white hover:bg-brand-700">Lihat dokumen</a>
     </div>
 </section>

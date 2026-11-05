@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title', 'Dokumen')
 @section('content')
-@include('partials.page-header', ['title' => 'Dokumen legalitas', 'subtitle' => 'Salinan izin dan pengesahan resmi ' . setting('site_name') . ' yang dapat diperiksa oleh donatur dan mitra.'])
+@include('partials.page-header', ['title' => 'Dokumen legalitas', 'subtitle' => 'Izin dan pengesahan resmi ' . setting('site_name') . ' sebagai lembaga sosial.'])
 
 @include('partials.legalitas')
 

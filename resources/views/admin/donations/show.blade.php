@@ -52,7 +52,7 @@
             <button class="mt-4 rounded-full bg-brand-800 px-6 py-3 text-sm font-bold text-white hover:bg-brand-700">Simpan status</button>
         </form>
 
-        <form method="POST" action="{{ route('admin.donations.destroy', $donation) }}" onsubmit="return confirm('Hapus donasi ini secara permanen?')">
+        <form method="POST" action="{{ route('admin.donations.destroy', $donation) }}" data-confirm="Donasi ini akan dihapus permanen beserta datanya. Tindakan ini tidak dapat dibatalkan." data-confirm-title="Hapus donasi ini?" data-confirm-ok="Ya, hapus donasi">
             @csrf @method('DELETE')
             <button class="text-sm font-semibold text-red-700 hover:underline">Hapus donasi ini</button>
         </form>

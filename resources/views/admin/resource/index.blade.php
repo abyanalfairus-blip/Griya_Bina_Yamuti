@@ -43,7 +43,7 @@
                             <a href="{{ route('admin.' . $route . '.edit', $item->id) }}" class="font-semibold text-brand-700 hover:underline">Ubah</a>
                         @endif
                         @if(in_array('delete', $actions))
-                            <form method="POST" action="{{ route('admin.' . $route . '.destroy', $item->id) }}" class="ml-3 inline" onsubmit="return confirm('Hapus data ini? Tindakan tidak dapat dibatalkan.')">
+                            <form method="POST" action="{{ route('admin.' . $route . '.destroy', $item->id) }}" class="ml-3 inline" data-confirm="Data ini akan dihapus permanen dan tidak dapat dikembalikan." data-confirm-title="Hapus data ini?">
                                 @csrf @method('DELETE')<button class="font-semibold text-red-700 hover:underline">Hapus</button>
                             </form>
                         @endif
