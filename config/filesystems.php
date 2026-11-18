@@ -33,7 +33,8 @@ return [
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app/private'),
-            'serve' => true,
+            // false: alamat /storage/... dipakai untuk foto unggahan (disk public), bukan berkas privat.
+            'serve' => false,
             'throw' => false,
             'report' => false,
         ],
