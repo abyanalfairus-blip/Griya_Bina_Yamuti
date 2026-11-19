@@ -37,6 +37,7 @@ class SettingController extends Controller
                 'instagram' => ['Tautan Instagram', 'text'],
                 'facebook' => ['Tautan Facebook', 'text'],
                 'youtube' => ['Tautan YouTube', 'text'],
+                'tiktok' => ['Tautan TikTok (contoh: https://www.tiktok.com/@namaakun)', 'text'],
                 'maps_embed' => ['URL embed Google Maps', 'text'],
             ],
             'Kalkulator Zakat' => [

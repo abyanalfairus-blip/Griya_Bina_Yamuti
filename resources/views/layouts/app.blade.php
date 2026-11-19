@@ -195,6 +195,7 @@
                     ['instagram', 'Instagram', setting('instagram'), 'hover:bg-[#E1306C]'],
                     ['facebook', 'Facebook', setting('facebook'), 'hover:bg-[#1877F2]'],
                     ['youtube', 'YouTube', setting('youtube'), 'hover:bg-[#FF0000]'],
+                    ['tiktok', 'TikTok', setting('tiktok'), 'hover:bg-black'],
                     ['whatsapp', 'WhatsApp', setting('whatsapp') ? 'https://wa.me/' . setting('whatsapp') : null, 'hover:bg-[#25D366]'],
                 ] as [$icon, $label, $url, $hover])
                     @if($url)

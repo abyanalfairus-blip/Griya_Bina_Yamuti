@@ -28,6 +28,19 @@ class Donation extends Model
         'rejected' => 'Ditolak',
     ];
 
+    /** Asal donasi; selain "website" dicatat manual oleh admin. */
+    public const SOURCES = [
+        'website' => 'Formulir website',
+        'whatsapp' => 'Laporan WhatsApp',
+        'transfer' => 'Transfer langsung',
+        'tunai' => 'Tunai di yayasan',
+    ];
+
+    public function getSourceLabelAttribute(): string
+    {
+        return self::SOURCES[$this->source ?? 'website'] ?? ucfirst((string) $this->source);
+    }
+
     public function program()
     {
         return $this->belongsTo(Program::class);

@@ -70,7 +70,17 @@
             <img src="{{ media_url($donation->proof) }}" alt="Bukti transfer" class="mt-4 max-h-56 rounded-lg border border-brand-100">
         @endif
         <input type="file" name="proof" accept="image/*" required class="mt-4 block w-full text-sm file:mr-4 file:rounded-full file:border-0 file:bg-brand-100 file:px-4 file:py-2 file:font-semibold file:text-brand-800">
-        <button class="mt-4 rounded-full bg-brand-800 px-6 py-3 text-sm font-bold text-white hover:bg-brand-700">Kirim bukti transfer</button>
+        <div class="mt-4 flex flex-wrap items-center gap-3">
+            <button class="rounded-full bg-brand-800 px-6 py-3 text-sm font-bold text-white hover:bg-brand-700">Kirim bukti transfer</button>
+            @if(setting('whatsapp'))
+                <span class="text-sm text-brand-500">atau</span>
+                {{-- Pesan WA sudah berisi nomor donasi, jadi admin cukup mencarinya lalu mengubah status menjadi Diterima --}}
+                <a href="https://wa.me/{{ setting('whatsapp') }}?text={{ rawurlencode('Assalamualaikum, saya ingin konfirmasi donasi ' . $donation->invoice . ' sebesar ' . rupiah($donation->total_transfer) . ' untuk ' . ($donation->program?->title ?? $donation->type_label) . ($donation->paymentMethod ? ' melalui ' . $donation->paymentMethod->name : '') . '. Bukti transfer saya lampirkan. Terima kasih.') }}" target="_blank" rel="noopener"
+                   class="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-5 py-3 text-sm font-bold text-white hover:brightness-95">
+                    <x-icon name="whatsapp" class="h-4 w-4" /> Konfirmasi via WhatsApp
+                </a>
+            @endif
+        </div>
     </form>
     @endif
 

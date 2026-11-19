@@ -7,6 +7,7 @@
         <h2 class="font-display text-lg text-brand-900">Rincian</h2>
         <dl class="mt-4 grid grid-cols-3 gap-y-3 text-sm">
             @foreach([
+                'Sumber' => $donation->source_label,
                 'Donatur' => $donation->donor_name . ($donation->is_anonymous ? ' (ingin anonim)' : ''),
                 'WhatsApp' => $donation->donor_phone ?: '-',
                 'Email' => $donation->donor_email ?: '-',
@@ -17,6 +18,7 @@
                 'Total transfer' => rupiah($donation->total_transfer),
                 'Metode' => $donation->paymentMethod?->name ?? '-',
                 'Dibuat' => $donation->created_at->translatedFormat('d F Y, H:i'),
+                'Diterima' => $donation->paid_at?->translatedFormat('d F Y') ?? '-',
                 'Pesan' => $donation->message ?: '-',
             ] as $k => $v)
                 <dt class="text-brand-600">{{ $k }}</dt><dd class="col-span-2 font-semibold">{{ $v }}</dd>
@@ -33,7 +35,7 @@
             @if($donation->proof)
                 <a href="{{ media_url($donation->proof) }}" target="_blank"><img src="{{ media_url($donation->proof) }}" alt="Bukti transfer" class="mt-4 max-h-96 rounded-lg border border-brand-100"></a>
             @else
-                <p class="mt-3 text-sm text-brand-600">Donatur belum mengunggah bukti transfer.</p>
+                <p class="mt-3 text-sm text-brand-600">{{ ($donation->source ?? 'website') === 'tunai' ? 'Donasi tunai, tidak ada bukti transfer.' : 'Belum ada bukti transfer.' }}</p>
             @endif
         </div>
 

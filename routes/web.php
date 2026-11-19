@@ -65,7 +65,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::middleware(EnsureAdmin::class)->group(function () {
         Route::get('/', [Admin\DashboardController::class, 'index'])->name('dashboard');
 
-        Route::resource('donations', Admin\DonationController::class)->only(['index', 'show', 'update', 'destroy']);
+        Route::resource('donations', Admin\DonationController::class)->only(['index', 'create', 'store', 'show', 'update', 'destroy']);
 
         Route::resource('programs', Admin\ProgramController::class)->except('show');
         Route::resource('program-items', Admin\ProgramItemController::class)->except('show')

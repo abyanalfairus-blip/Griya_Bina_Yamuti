@@ -31,6 +31,7 @@ class Setting extends Model
         'instagram' => 'https://www.instagram.com/griyabinayamuti._99/',
         'facebook' => 'https://www.facebook.com/GriyaBinaYamuti/',
         'youtube' => 'https://www.youtube.com/@GriyaBinayamuti3846',
+        'tiktok' => '',
         'maps_embed' => '',
         'gold_price' => '1500000',
         'fitrah_rate' => '45000',

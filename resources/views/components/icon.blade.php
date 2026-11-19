@@ -29,6 +29,7 @@
         'arrow-right' => '<path d="M5 12h14M13 6l6 6-6 6"/>',
         'dashboard' => '<rect x="3.500" y="3.500" width="7" height="9" rx="1.500"/><rect x="13.500" y="3.500" width="7" height="5" rx="1.500"/><rect x="13.500" y="11.500" width="7" height="9" rx="1.500"/><rect x="3.500" y="15.500" width="7" height="5" rx="1.500"/>',
         'menu' => '<path d="M4 7h16M4 12h16M4 17h16"/>',
+        'tiktok' => '<path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5"/><path d="M14 3c.4 2.6 2.1 4.3 5 4.6"/>',
         'instagram' => '<rect x="3.5" y="3.5" width="17" height="17" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17.2 6.8h.01"/>',
         'facebook' => '<path d="M14.5 21v-7.5h2.7l.5-3.2h-3.2V8.4c0-.9.4-1.600 1.700-1.600h1.600V4.100C17.200 4.100 16.300 4 15.300 4c-2.400 0-4 1.500-4 4.100v2.200H8.600v3.200h2.700V21"/>',
         'youtube' => '<rect x="2.5" y="5.5" width="19" height="13" rx="4"/><path d="m10 9.200 5 2.800-5 2.800z"/>',
